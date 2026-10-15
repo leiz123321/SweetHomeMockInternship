@@ -182,6 +182,16 @@ public class HomePrintableComponent extends JComponent implements Printable {
    * Prints a given <code>page</code>.
    */
   public int print(Graphics g, PageFormat pageFormat, int page) throws PrinterException {
+
+    Level currentLevel = this.home.getSelectedLevel();
+    if (page > 0 && page <= this.home.getLevels().size()) {
+      this.home.setSelectedLevel(this.home.getLevels().get(page - 1));
+    }
+    boolean showLevel = !this.home.getFurnitureVisibleProperties().contains(HomePieceOfFurniture.SortableProperty.LEVEL)
+            && !this.home.getLevels().isEmpty();
+    if (showLevel) {
+      this.controller.getFurnitureController().toggleFurnitureVisibleProperty(HomePieceOfFurniture.SortableProperty.LEVEL);
+    }
     // Check current thread isn't interrupted
     if (Thread.interrupted()) {
       throw new InterruptedPrinterException();
@@ -358,7 +368,6 @@ public class HomePrintableComponent extends JComponent implements Printable {
             public boolean include(Home home, HomePieceOfFurniture piece) {
               // Print only furniture at selected level when the plan or the 3D view is printed
               return (furnitureFilter == null || furnitureFilter.include(home, piece))
-                  && piece.isAtLevel(selectedLevel)
                   && (piece.getLevel() == null || piece.getLevel().isViewable());
             }
           });
@@ -422,7 +431,14 @@ public class HomePrintableComponent extends JComponent implements Printable {
         g2D.translate(-xFixedFooter, -yFixedFooter);
       }
     }  
-    pageFormat.setPaper(oldPaper);    
+    pageFormat.setPaper(oldPaper);
+
+    this.home.setSelectedLevel(currentLevel);
+
+    if (showLevel) {
+      this.controller.getFurnitureController().toggleFurnitureVisibleProperty(HomePieceOfFurniture.SortableProperty.LEVEL);
+    }
+
     return pageExists;
   }
 

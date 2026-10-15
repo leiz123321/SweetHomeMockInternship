@@ -145,7 +145,7 @@ public class FurnitureTable extends JTable implements View, Printable {
    * Creates a table controlled by <code>controller</code>
    * that displays furniture of <code>home</code>.
    */
-  public FurnitureTable(Home home, UserPreferences preferences, 
+  public FurnitureTable(Home home, UserPreferences preferences,
                        FurnitureController controller) {
     this.preferences = preferences;
     float resolutionScale = SwingTools.getResolutionScale();
@@ -2181,10 +2181,7 @@ public class FurnitureTable extends JTable implements View, Printable {
       // Search furniture at viewable levels 
       List<HomePieceOfFurniture> viewableFurniture = new ArrayList<HomePieceOfFurniture>(furniture.size());
       for (HomePieceOfFurniture homePiece : furniture) {
-        if (homePiece.getLevel() == null
-            || homePiece.getLevel().isViewable()) {
           viewableFurniture.add(homePiece);
-        }
       }
       
       List<HomePieceOfFurniture> filteredAndSortedFurniture;
